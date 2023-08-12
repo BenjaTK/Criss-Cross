@@ -1,3 +1,22 @@
-[gd_scene format=3 uid="uid://o8fnvxsefnrv"]
+[gd_scene load_steps=3 format=3 uid="uid://o8fnvxsefnrv"]
+
+[ext_resource type="Script" path="res://addons/criss-cross/nodes/grid2d.gd" id="1_u3k5y"]
+[ext_resource type="FontFile" uid="uid://18sh3tt3a725" path="res://font_kenney_pixel.ttf" id="2_eynds"]
 
 [node name="TestScene" type="Node"]
+
+[node name="Grid2D" type="Node2D" parent="."]
+script = ExtResource("1_u3k5y")
+regions = Array[Rect2i]([Rect2i(0, 0, 10, 10)])
+cell_size = Vector2i(32, 32)
+debug_enabled = true
+debug_show_labels = false
+debug_font = ExtResource("2_eynds")
+
+[node name="Label" type="Label" parent="."]
+offset_left = 12.0
+offset_top = -49.0
+offset_right = 96.0
+offset_bottom = -23.0
+theme_override_fonts/font = ExtResource("2_eynds")
+text = "asdfgasefa"

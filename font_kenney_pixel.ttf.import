@@ -1,0 +1,39 @@
+[remap]
+
+importer="font_data_dynamic"
+type="FontFile"
+uid="uid://18sh3tt3a725"
+path="res://.godot/imported/font_kenney_pixel.ttf-19901b46315e3effa2e3954f7079a735.fontdata"
+
+[deps]
+
+source_file="res://font_kenney_pixel.ttf"
+dest_files=["res://.godot/imported/font_kenney_pixel.ttf-19901b46315e3effa2e3954f7079a735.fontdata"]
+
+[params]
+
+Rendering=null
+antialiasing=0
+generate_mipmaps=false
+multichannel_signed_distance_field=false
+msdf_pixel_range=8
+msdf_size=48
+allow_system_fallback=true
+force_autohinter=false
+hinting=1
+subpixel_positioning=1
+oversampling=0.0
+Fallbacks=null
+fallbacks=[]
+Compress=null
+compress=true
+preload=[{
+"chars": [],
+"glyphs": [],
+"name": "New Configuration",
+"size": Vector2i(16, 0),
+"variation_embolden": 0.0
+}]
+language_support={}
+script_support={}
+opentype_features={}
