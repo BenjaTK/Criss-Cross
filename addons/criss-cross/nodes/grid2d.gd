@@ -24,6 +24,10 @@ extends Node2D
 	set(value):
 		debug_enabled = value
 		queue_redraw()
+@export var debug_editor_only := false :
+	set(value):
+		debug_editor_only = value
+		queue_redraw()
 @export var debug_grid_color := Color("ffffffbf") :
 	set(value):
 		debug_grid_color = value
@@ -197,6 +201,9 @@ func local_map_to_world_centered(cell: Vector2i) -> Vector2:
 
 
 func _draw() -> void:
+	if not Engine.is_editor_hint() and debug_editor_only:
+		return
+
 	if not debug_enabled:
 		return
 
