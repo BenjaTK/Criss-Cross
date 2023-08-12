@@ -84,6 +84,11 @@ func get_valuexz(x: int, z: int):
 # --- Cells ---
 
 
+## Returns a [code]Dictionary[/code] with the positions and values of the cells.
+func get_cells() -> Dictionary:
+	return _grid
+
+
 ## Adds [param cell] to the grid with a value of null.
 func add_cell(cell: Vector2i) -> void:
 	if not has_cell(cell):

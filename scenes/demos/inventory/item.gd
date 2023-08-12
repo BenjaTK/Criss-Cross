@@ -2,7 +2,6 @@ extends Area2D
 
 
 @export var grid: Grid2D
-@export var starting_cell: Vector2i
 @export var size: Vector2i = Vector2i.ONE
 
 var dragging := false
@@ -28,7 +27,7 @@ func _ready() -> void:
 		for y in size.y:
 			occupied_cells.append(Vector2i(x, y))
 
-	_move_to(starting_cell)
+	_move_to(grid.world_to_map(global_position))
 
 
 func _process(delta: float) -> void:
@@ -74,6 +73,10 @@ func _stop_dragging() -> void:
 
 
 func _move_to(cell: Vector2i) -> void:
+	var target_cells := _get_cells(cell)
+	if not grid.has_cells(target_cells) or not grid.are_values_null(target_cells):
+		cell = _get_next_empty_cell_in_grid()
+
 	top_left_cell = cell
 	grid.set_values(_get_cells(top_left_cell), self)
 	grid.queue_redraw()
@@ -90,6 +93,14 @@ func _get_cells(origin: Vector2i) -> Array[Vector2i]:
 		cells.append(occupied_cell + origin)
 
 	return cells
+
+
+func _get_next_empty_cell_in_grid() -> Vector2i:
+	for cell in grid.get_cells():
+		if grid.is_value_null(cell):
+			return cell
+
+	return Vector2i(NAN, NAN)
 
 
 func _draw() -> void:
