@@ -57,11 +57,6 @@ func _ready() -> void:
 	reset()
 
 
-func _process(delta: float) -> void:
-	print(map_to_world_centered(Vector2i.ZERO))
-	print(map_to_world(Vector2i.ZERO))
-
-
 func reset() -> void:
 	_grid.clear()
 
@@ -134,6 +129,14 @@ func has_cell(cell: Vector2i) -> bool:
 
 func has_cellxy(x: int, y: int) -> bool:
 	return has_cell(Vector2i(x, y))
+
+
+func has_cells(cells: Array[Vector2i]) -> bool:
+	for cell in cells:
+		if not has_cell(cell):
+			return false
+
+	return true
 
 
 func is_value_null(cell: Vector2i) -> bool:

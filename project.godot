@@ -11,9 +11,15 @@ config_version=5
 [application]
 
 config/name="Grid Addon"
-run/main_scene="res://scenes/test_scene/test_scene.tscn"
+run/main_scene="res://scenes/demos/inventory/inventory_demo.tscn"
 config/features=PackedStringArray("4.1", "Forward Plus")
 config/icon="res://icon.svg"
+
+[display]
+
+window/size/viewport_width=1280
+window/size/viewport_height=720
+window/stretch/mode="canvas_items"
 
 [editor_plugins]
 
