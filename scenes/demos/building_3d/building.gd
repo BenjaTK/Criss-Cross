@@ -6,26 +6,21 @@ enum Dir {DOWN, LEFT, UP, RIGHT}
 
 @export var size: Vector2i = Vector2i.ONE
 
-# All cells that fit the size of the building. In local space.
-# Example: 2x2 building: Vector2i(0, 0); Vector2i(1, 0); Vector2i(1, 0); Vector2i(1, 1)
-var occupied_cells: Array[Vector2i]
 
-
-func get_cells(origin: Vector2i) -> Array[Vector2i]:
-	if occupied_cells.is_empty():
-		_set_occupied_cells()
+func get_cells(origin: Vector2i, dir: Dir) -> Array[Vector2i]:
 	var cells: Array[Vector2i]
-	for occupied_cell in occupied_cells:
-		cells.append(occupied_cell + origin)
+
+	match dir:
+		Dir.DOWN, Dir.UP:
+			for x in size.x:
+				for z in size.y:
+					cells.append(origin + Vector2i(x, z))
+		Dir.LEFT, Dir.RIGHT:
+			for x in size.y:
+				for z in size.x:
+					cells.append(origin + Vector2i(x, z))
 
 	return cells
-
-
-func _set_occupied_cells() -> void:
-	occupied_cells.clear()
-	for x in size.x:
-		for z in size.y:
-			occupied_cells.append(Vector2i(x, z))
 
 
 func get_rotation_angle(dir: Dir) -> float:

@@ -37,7 +37,7 @@ func _process(delta: float) -> void:
 	moused_over_cell = grid.world_to_map(_get_mouse_pos_in_world())
 
 	# Hide the preview if the position isn't valid.
-	preview.visible = grid.are_values_null(preview_building.get_cells(moused_over_cell))
+	preview.visible = grid.are_values_null(preview_building.get_cells(moused_over_cell, dir))
 
 	preview.rotation.y = preview_building.get_rotation_angle(dir)
 
@@ -76,7 +76,7 @@ func _place_building() -> void:
 		return
 
 	# Get all cells the building will occupy, for buildings larger than 1x1.
-	var cells: Array[Vector2i] = building.get_cells(origin)
+	var cells: Array[Vector2i] = building.get_cells(origin, dir)
 	# Check if all cells are free.
 	if not grid.are_values_null(cells):
 		print("Can't build here!")

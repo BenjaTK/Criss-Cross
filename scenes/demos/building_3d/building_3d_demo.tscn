@@ -75,4 +75,5 @@ offset_left = 24.0
 offset_top = 24.0
 offset_right = 275.0
 offset_bottom = 50.0
-text = "Space: Switch between buildings"
+text = "Space: Switch between buildings.
+R: Rotate."
