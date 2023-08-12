@@ -156,6 +156,15 @@ func are_values_null(cells: Array[Vector2i]) -> bool:
 	return true
 
 
+## Returns true if all values in the [param cells] are equal to [value].
+func are_values_equal(cells: Array[Vector2i], value) -> bool:
+	for cell in cells:
+		if not get_value(cell) == value:
+			return false
+
+	return true
+
+
 # --- Positions ---
 
 

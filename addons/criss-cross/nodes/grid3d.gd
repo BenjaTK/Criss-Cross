@@ -93,6 +93,14 @@ func has_cellxz(x: int, z: int) -> bool:
 	return has_cell(Vector2i(x, z))
 
 
+func has_cells(cells: Array[Vector2i]) -> bool:
+	for cell in cells:
+		if not has_cell(cell):
+			return false
+
+	return true
+
+
 func is_value_null(cell: Vector2i) -> bool:
 	return get_value(cell) == null
 
@@ -105,6 +113,15 @@ func is_value_nullxz(x: int, z: int) -> bool:
 func are_values_null(cells: Array[Vector2i]) -> bool:
 	for cell in cells:
 		if not is_value_null(cell):
+			return false
+
+	return true
+
+
+## Returns true if all values in the [param cells] are equal to [value].
+func are_values_equal(cells: Array[Vector2i], value) -> bool:
+	for cell in cells:
+		if not get_value(cell) == value:
 			return false
 
 	return true

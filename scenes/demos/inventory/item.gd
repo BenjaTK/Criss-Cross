@@ -23,6 +23,8 @@ var occupied_cells: Array[Vector2i]
 
 
 func _ready() -> void:
+	connect("input_event", _on_input_event)
+
 	for x in size.x:
 		for y in size.y:
 			occupied_cells.append(Vector2i(x, y))
@@ -30,8 +32,6 @@ func _ready() -> void:
 	top_left_cell = starting_cell
 	grid.set_values(_get_cells(top_left_cell), self)
 	grid.queue_redraw()
-
-	connect("input_event", _on_input_event)
 
 
 func _process(delta: float) -> void:
@@ -97,6 +97,6 @@ func _draw() -> void:
 		if not grid.has_cells(_get_cells(current_cell)):
 			return
 
-		var rect_position := grid.map_to_world(current_cell) - position
+		var rect_position := to_local(grid.map_to_world(current_cell))
 		var rect_size := size * grid.cell_size
 		draw_rect(Rect2(rect_position, rect_size), Color(1, 1, 1, 0.38823530077934))
