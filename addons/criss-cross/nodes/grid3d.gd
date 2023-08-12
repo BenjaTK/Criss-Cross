@@ -1,14 +1,17 @@
 @tool
+@icon("grid3d.svg")
+class_name Grid3D
 extends Node3D
+## Grid that goes along the X and Z axis.
 
 
 @export var infinite: bool = false :
 	set(value):
 		infinite = value
 		reset()
-@export var regions: Array[Rect2i] = [Rect2i(0, 0, 16, 16)] :
+@export var _regions: Array[Rect2i] = [Rect2i(0, 0, 16, 16)] :
 	set(value):
-		regions = value
+		_regions = value
 		reset()
 @export var cell_size: Vector2i = Vector2i(16, 16)
 
@@ -25,12 +28,8 @@ func reset() -> void:
 	if infinite:
 		return
 
-	for region in regions:
-		var x_range = range(region.position.x, region.position.x + region.size.x)
-		var z_range = range(region.position.y, region.position.y + region.size.y)
-		for x in x_range:
-			for z in z_range:
-				_grid[Vector2i(x, z)] = null
+	for region in _regions:
+		add_region(region)
 
 
 # --- Values ---
@@ -68,10 +67,26 @@ func get_valuexz(x: int, z: int):
 	return get_value(Vector2i(x, z))
 
 
+# --- Regions ---
+
+
+## Adds a region (without resetting any values)
+func add_region(region: Rect2i) -> void:
+	var x_range = range(region.position.x, region.position.x + region.size.x)
+	var z_range = range(region.position.y, region.position.y + region.size.y)
+	for x in x_range:
+		for z in z_range:
+			if has_cellxz(x, z):
+				continue
+
+			_grid[Vector2i(x, z)] = null
+
+
 # --- Checks ---
 
+
 func has_cell(cell: Vector2i) -> bool:
-	return _grid.keys.has(cell)
+	return _grid.keys().has(cell)
 
 
 func has_cellxz(x: int, z: int) -> bool:
@@ -97,18 +112,27 @@ func are_values_null(cells: Array[Vector2i]) -> bool:
 # --- Positions ---
 
 
+## Returns the cell in [param pos].
 func world_to_map(pos: Vector3) -> Vector2i:
 	var pos_2d: Vector2 = Vector2(pos.x - position.x, pos.z - position.z)
 	return Vector2i(pos_2d / Vector2(cell_size))
 
 
-func map_to_world_centered(cell: Vector2i) -> Vector3:
-	return map_to_world(cell) + Vector3(cell_size.x / 2, 0, cell_size.y / 2)
-
-
+## Returns the position of the top left corner of the [param cell] in the world.
 func map_to_world(cell: Vector2i) -> Vector3:
 	return Vector3(cell.x * cell_size.x, 0, cell.y * cell_size.y) + position
 
 
+## Returns the position of the center of the [param cell] in the world.
+func map_to_world_centered(cell: Vector2i) -> Vector3:
+	return map_to_world(cell) + Vector3(cell_size.x / 2, 0, cell_size.y / 2)
+
+
+## Returns the position of the top left corner of the [param cell] relative to the [Grid2D]'s position.
 func local_map_to_world(cell: Vector2i) -> Vector3:
 	return Vector3(cell.x * cell_size.x, position.y, cell.y * cell_size.y)
+
+
+## Returns the position of the center of the [param cell] relative to the [Grid2D]'s position.
+func local_map_to_world_centered(cell: Vector2i) -> Vector3:
+	return local_map_to_world(cell) + Vector3(cell_size.x / 2, 0, cell_size.y / 2)
