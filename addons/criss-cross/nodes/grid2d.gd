@@ -144,7 +144,7 @@ func is_value_nullxy(x: int, y: int) -> bool:
 	return is_value_null(Vector2i(x, y))
 
 
-## Returns true if all values in [param cells] are equal to null.
+## Returns true if all values in the [param cells] are equal to null.
 func are_values_null(cells: Array[Vector2i]) -> bool:
 	for cell in cells:
 		if not is_value_null(cell):
