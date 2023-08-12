@@ -120,6 +120,20 @@ func get_valuexy(x: int, y: int):
 	return get_value(Vector2i(x, y))
 
 
+# --- Cells ---
+
+
+## Adds [param cell] to the grid with a value of null.
+func add_cell(cell: Vector2i) -> void:
+	if not has_cell(cell):
+		_grid[cell] = null
+
+
+## Adds a cell at ([param x], [param y]) with a value of null.
+func add_cellxy(x: int, y: int) -> void:
+	add_cell(Vector2i(x, y))
+
+
 ## Erases [param cell] from the grid.
 func erase_cell(cell: Vector2i) -> void:
 	if not has_cell(cell):
@@ -130,6 +144,7 @@ func erase_cell(cell: Vector2i) -> void:
 ## Erases the ([param x], [param y]) cell from the grid.
 func erase_cellxy(x: int, y: int) -> void:
 	erase_cell(Vector2i(x, y))
+
 
 # --- Regions ---
 
@@ -143,7 +158,7 @@ func add_region(region: Rect2i) -> void:
 			if has_cellxy(x, y):
 				continue
 
-			set_valuexy(x, y, null)
+			add_cellxy(x, y)
 
 
 ## Erases all cells in [param region].
