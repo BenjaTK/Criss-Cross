@@ -2,9 +2,15 @@
 @icon("grid2d.svg")
 class_name Grid2D
 extends Node2D
+## Generic grid that goes along the X and Y axis.
+##
+## Cells can contain values of any kind. If not [param infinite],
+## it will generate cells based on [param regions] and will set them
+## all to null.[br]Used for quickly making grid-based systems.
 
 
-## If true, ignores [param regions] and doesn't initialize with any cells.
+## If true, ignores [param regions] and doesn't initialize with any cells,
+## but allows setting values in any cells.
 @export var infinite: bool = false :
 	set(value):
 		infinite = value
@@ -13,13 +19,13 @@ extends Node2D
 	set(value):
 		_regions = value
 		reset()
+## Cell size as (x, y).
 @export var cell_size: Vector2i = Vector2i(16, 16) :
 	set(value):
 		cell_size = value
 		queue_redraw()
 @export_group("Debug", "debug_")
-## Draws the _grid when in-game.
-## Will draw the _grid in-editor if the node is selected.
+## Draws the grid with option value and position labels.
 @export var debug_enabled := false :
 	set(value):
 		debug_enabled = value
@@ -32,6 +38,7 @@ extends Node2D
 	set(value):
 		debug_grid_color = value
 		queue_redraw()
+## Shows labels for every cell that show the cell position and its value.
 @export var debug_show_labels := true :
 	set(value):
 		debug_show_labels = value
@@ -39,6 +46,7 @@ extends Node2D
 @export var debug_font: Font :
 	set(value):
 		if value == null:
+			# Only way to get the default font.
 			var label = Label.new()
 			value = label.get_theme_font("")
 			label.queue_free()
@@ -61,15 +69,14 @@ func _ready() -> void:
 	reset()
 
 
+## Resets the grid to all cells in [param regions]
+## or to empty if [param infinite] is [code]true[/code].
 func reset() -> void:
 	_grid.clear()
 
-	if infinite:
-		queue_redraw()
-		return
-
-	for region in _regions:
-		add_region(region)
+	if not infinite:
+		for region in _regions:
+			add_region(region)
 
 	queue_redraw()
 
@@ -77,42 +84,57 @@ func reset() -> void:
 # --- Values ---
 
 
-## Sets [param cell] to [param value]
+## Sets [param cell] to [param value].
 func set_value(cell: Vector2i, value) -> void:
 	if not has_cell(cell) and not infinite:
-		push_warning("%s is out of %s's bounds" % [cell, name])
+		push_error("Attempted to set %s to %s in %s, but the cell doesn't exist" % [cell, value, name])
 		return
 
 	_grid[cell] = value
 
 
+## Sets the ([param x], [param y]) cell to [param value].
 func set_valuexy(x: int, y: int, value) -> void:
 	set_value(Vector2i(x, y), value)
 
 
-## Sets all cells in [param cells] to [param value]
+## Sets all cells in [param cells] to [param value].
 func set_values(cells: Array[Vector2i], value) -> void:
 	for cell in cells:
 		set_value(cell, value)
 
 
+## Returns the value in [param cell].
+## Returns [code]null[/code] and pushes an error if the cell doesn't exist.
 func get_value(cell: Vector2i):
 	if not has_cell(cell):
-		if not infinite:
-			push_warning("%s is out of %s's bounds" % [cell, name])
+		push_error("Attempted to get value at %s in %s, but the cell doesn't exist" % [cell, name])
 		return null
 
 	return _grid[cell]
 
 
+## Returns the value in the ([param x], [param y]) cell.
+## Returns [code]null[/code] and pushes an error if the cell doesn't exist.
 func get_valuexy(x: int, y: int):
 	return get_value(Vector2i(x, y))
 
 
+## Erases [param cell] from the grid.
+func erase_cell(cell: Vector2i) -> void:
+	if not has_cell(cell):
+		return
+	_grid.erase(cell)
+
+
+## Erases the ([param x], [param y]) cell from the grid.
+func erase_cellxy(x: int, y: int) -> void:
+	erase_cell(Vector2i(x, y))
+
 # --- Regions ---
 
 
-## Adds a region (without resetting any values)
+## Adds a [param region] (without resetting any values).
 func add_region(region: Rect2i) -> void:
 	var x_range = range(region.position.x, region.position.x + region.size.x)
 	var y_range = range(region.position.y, region.position.y + region.size.y)
@@ -121,20 +143,35 @@ func add_region(region: Rect2i) -> void:
 			if has_cellxy(x, y):
 				continue
 
-			_grid[Vector2i(x, y)] = null
+			set_valuexy(x, y, null)
+
+
+## Erases all cells in [param region].
+func erase_region(region: Rect2i) -> void:
+	var x_range = range(region.position.x, region.position.x + region.size.x)
+	var y_range = range(region.position.y, region.position.y + region.size.y)
+	for x in x_range:
+		for y in y_range:
+			if not has_cellxy(x, y):
+				continue
+
+			erase_cellxy(x, y)
 
 
 # --- Checks ---
 
 
+## Returns [code]true[/code] if [param cell] exists in the grid.
 func has_cell(cell: Vector2i) -> bool:
 	return _grid.keys().has(cell)
 
 
+## Returns [code]true[/code] if the ([param x], [param y]) cell exists in the grid.
 func has_cellxy(x: int, y: int) -> bool:
 	return has_cell(Vector2i(x, y))
 
 
+## Returns [code]true[/code] if all [param cells] exist in the grid.
 func has_cells(cells: Array[Vector2i]) -> bool:
 	for cell in cells:
 		if not has_cell(cell):
@@ -143,10 +180,14 @@ func has_cells(cells: Array[Vector2i]) -> bool:
 	return true
 
 
+## Returns [code]true[/code] if the value in [param cell] is
+## [code]null[/code] or if the cell doesn't exist.
 func is_value_null(cell: Vector2i) -> bool:
 	return get_value(cell) == null
 
 
+## Returns [code]true[/code] if the value in the ([param x], [param y]) cell
+## is [code]null[/code] or if the cell doesn't exist.
 func is_value_nullxy(x: int, y: int) -> bool:
 	return is_value_null(Vector2i(x, y))
 
@@ -213,17 +254,17 @@ func _draw() -> void:
 
 		draw_rect(rect, debug_grid_color, false)
 
-		if debug_show_labels:
-			var string: String = "%s\n%s" % [cell, _grid[cell]]
-			var label_font_size := min(cell_size.x * 0.5, 12)
-			var y_offset: float = cell_size.y * 0.5
-			var string_pos: Vector2 = cell_in_world + Vector2(0, y_offset)
-			var value_string_pos: Vector2 = string_pos + Vector2(0, debug_font_size)
+		if not debug_show_labels:
+			continue
 
-			# Position string and value string below it.
-			draw_string(debug_font, string_pos,
-						str(cell), HORIZONTAL_ALIGNMENT_CENTER,
-						cell_size.x, debug_font_size, debug_grid_color)
-			draw_string(debug_font, value_string_pos,
-						str(_grid[cell]), HORIZONTAL_ALIGNMENT_CENTER,
-						cell_size.x, debug_font_size, debug_grid_color)
+		var y_offset: float = cell_size.y * 0.5
+		var string_pos: Vector2 = cell_in_world + Vector2(0, y_offset)
+		var value_string_pos: Vector2 = string_pos + Vector2(0, debug_font_size)
+
+		# Position string and value string below it.
+		draw_string(debug_font, string_pos,
+					str(cell), HORIZONTAL_ALIGNMENT_CENTER,
+					cell_size.x, debug_font_size, debug_grid_color)
+		draw_string(debug_font, value_string_pos,
+					str(_grid[cell]), HORIZONTAL_ALIGNMENT_CENTER,
+					cell_size.x, debug_font_size, debug_grid_color)

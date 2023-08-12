@@ -2,9 +2,15 @@
 @icon("grid3d.svg")
 class_name Grid3D
 extends Node3D
-## Grid that goes along the X and Z axis.
+## Generic grid that goes along the X and Z axis.
+##
+## Cells can contain values of any kind. If not [param infinite],
+## it will generate cells based on [param regions] and will set them
+## all to null.[br]Used for quickly making grid-based systems.
 
 
+## If true, ignores [param regions] and doesn't initialize with any cells,
+## but allows setting values in any cell.
 @export var infinite: bool = false :
 	set(value):
 		infinite = value
@@ -13,6 +19,7 @@ extends Node3D
 	set(value):
 		_regions = value
 		reset()
+## Cell size as (x, z).
 @export var cell_size: Vector2i = Vector2i(2, 2)
 
 var _grid: Dictionary
@@ -22,6 +29,8 @@ func _ready() -> void:
 	reset()
 
 
+## Resets the grid to all cells in [param regions]
+## or to empty if [param infinite] is [code]true[/code].
 func reset() -> void:
 	_grid.clear()
 
@@ -44,6 +53,7 @@ func set_value(cell: Vector2i, value) -> void:
 	_grid[cell] = value
 
 
+## Sets the ([param x], [param z]) cell to [param value].
 func set_valuexz(x: int, z: int, value) -> void:
 	set_value(Vector2i(x, z), value)
 
@@ -54,6 +64,8 @@ func set_values(cells: Array[Vector2i], value) -> void:
 		set_value(cell, value)
 
 
+## Returns the value in [param cell].
+## Returns [code]null[/code] and pushes an error if the cell doesn't exist.
 func get_value(cell: Vector2i):
 	if not has_cell(cell):
 		if not infinite:
@@ -63,14 +75,27 @@ func get_value(cell: Vector2i):
 	return _grid[cell]
 
 
+## Returns the value in the ([param x], [param z]) cell.
+## Returns [code]null[/code] and pushes an error if the cell doesn't exist.
 func get_valuexz(x: int, z: int):
 	return get_value(Vector2i(x, z))
 
 
+## Erases [param cell] from the grid.
+func erase_cell(cell: Vector2i) -> void:
+	if not has_cell(cell):
+		return
+	_grid.erase(cell)
+
+
+## Erases the ([param x], [param z]) cell from the grid.
+func erase_cellxz(x: int, z: int) -> void:
+	erase_cell(Vector2i(x, z))
+
 # --- Regions ---
 
 
-## Adds a region (without resetting any values)
+## Adds a [param region] (without resetting any values).
 func add_region(region: Rect2i) -> void:
 	var x_range = range(region.position.x, region.position.x + region.size.x)
 	var z_range = range(region.position.y, region.position.y + region.size.y)
@@ -79,20 +104,35 @@ func add_region(region: Rect2i) -> void:
 			if has_cellxz(x, z):
 				continue
 
-			_grid[Vector2i(x, z)] = null
+			set_valuexz(x, z, null)
+
+
+## Erases all cells in [param region].
+func erase_region(region: Rect2i) -> void:
+	var x_range = range(region.position.x, region.position.x + region.size.x)
+	var z_range = range(region.position.y, region.position.y + region.size.y)
+	for x in x_range:
+		for z in z_range:
+			if not has_cellxz(x, z):
+				continue
+
+			erase_cellxz(x, z)
 
 
 # --- Checks ---
 
 
+## Returns [code]true[/code] if [param cell] exists in the grid.
 func has_cell(cell: Vector2i) -> bool:
 	return _grid.keys().has(cell)
 
 
+## Returns [code]true[/code] if the ([param x], [param z]) cell exists in the grid.
 func has_cellxz(x: int, z: int) -> bool:
 	return has_cell(Vector2i(x, z))
 
 
+## Returns [code]true[/code] if all [param cells] exist in the grid.
 func has_cells(cells: Array[Vector2i]) -> bool:
 	for cell in cells:
 		if not has_cell(cell):
@@ -101,10 +141,14 @@ func has_cells(cells: Array[Vector2i]) -> bool:
 	return true
 
 
+## Returns [code]true[/code] if the value in [param cell]
+## is [code]null[/code] or if the cell doesn't exist.
 func is_value_null(cell: Vector2i) -> bool:
 	return get_value(cell) == null
 
 
+## Returns [code]true[/code] if the value in the ([param x], [param z]) cell
+## is [code]null[/code] or if the cell doesn't exist.
 func is_value_nullxz(x: int, z: int) -> bool:
 	return is_value_null(Vector2i(x, z))
 

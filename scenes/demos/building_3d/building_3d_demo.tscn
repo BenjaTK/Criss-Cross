@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://cnvwogfdk5nxx" path="res://scenes/demos/building_3d/house_2.tscn" id="2_ayerb"]
 [ext_resource type="PackedScene" uid="uid://2fhkiou61sfm" path="res://scenes/demos/building_3d/house_1.tscn" id="2_da6qm"]
 [ext_resource type="PackedScene" uid="uid://c3ik01j4pclfq" path="res://scenes/demos/building_3d/house_3.tscn" id="4_qddq0"]
-[ext_resource type="Texture2D" uid="uid://d4c82vbqi71wp" path="res://scenes/demos/building_3d/texture_01.png" id="5_u6puc"]
+[ext_resource type="Texture2D" uid="uid://d4c82vbqi71wp" path="res://scenes/demos/building_3d/grid_texture.png" id="5_davf1"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_lq6o5"]
 sky_top_color = Color(0.384314, 0.454902, 0.54902, 1)
@@ -25,7 +25,7 @@ glow_enabled = true
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_jqct5"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_shq4w"]
-albedo_texture = ExtResource("5_u6puc")
+albedo_texture = ExtResource("5_davf1")
 uv1_scale = Vector3(0.25, 0.25, 0.25)
 uv1_triplanar = true
 uv1_world_triplanar = true
@@ -61,7 +61,7 @@ infinite = true
 transform = Transform3D(1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 0, 0)
 
 [node name="SpringArm3D" type="SpringArm3D" parent="CameraPivot"]
-spring_length = 16.0
+spring_length = 24.0
 
 [node name="Camera3D" type="Camera3D" parent="CameraPivot/SpringArm3D"]
 unique_name_in_owner = true

@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://d4c82vbqi71wp"
-path.s3tc="res://.godot/imported/texture_01.png-a0806069c8ca2e98d3ef5ba9a738df13.s3tc.ctex"
+path.s3tc="res://.godot/imported/grid_texture.png-f3927eb05228d4af21620e9357a5406d.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://scenes/demos/building_3d/texture_01.png"
-dest_files=["res://.godot/imported/texture_01.png-a0806069c8ca2e98d3ef5ba9a738df13.s3tc.ctex"]
+source_file="res://scenes/demos/building_3d/grid_texture.png"
+dest_files=["res://.godot/imported/grid_texture.png-f3927eb05228d4af21620e9357a5406d.s3tc.ctex"]
 
 [params]
 
