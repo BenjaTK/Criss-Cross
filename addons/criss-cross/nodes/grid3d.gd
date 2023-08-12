@@ -13,7 +13,7 @@ extends Node3D
 	set(value):
 		_regions = value
 		reset()
-@export var cell_size: Vector2i = Vector2i(16, 16)
+@export var cell_size: Vector2i = Vector2i(2, 2)
 
 var _grid: Dictionary
 

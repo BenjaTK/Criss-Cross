@@ -1,0 +1,78 @@
+[gd_scene load_steps=13 format=3 uid="uid://bajvg32615nyf"]
+
+[ext_resource type="Script" path="res://addons/criss-cross/nodes/grid3d.gd" id="1_2um3x"]
+[ext_resource type="Script" path="res://scenes/demos/building_3d/building_3d_demo.gd" id="1_tynj1"]
+[ext_resource type="PackedScene" uid="uid://cnvwogfdk5nxx" path="res://scenes/demos/building_3d/house_2.tscn" id="2_ayerb"]
+[ext_resource type="PackedScene" uid="uid://2fhkiou61sfm" path="res://scenes/demos/building_3d/house_1.tscn" id="2_da6qm"]
+[ext_resource type="PackedScene" uid="uid://c3ik01j4pclfq" path="res://scenes/demos/building_3d/house_3.tscn" id="4_qddq0"]
+[ext_resource type="Texture2D" uid="uid://d4c82vbqi71wp" path="res://scenes/demos/building_3d/texture_01.png" id="5_u6puc"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_lq6o5"]
+sky_top_color = Color(0.384314, 0.454902, 0.54902, 1)
+sky_horizon_color = Color(0.647059, 0.654902, 0.670588, 1)
+ground_bottom_color = Color(0.482353, 0.556863, 0.611765, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+
+[sub_resource type="Sky" id="Sky_3fhej"]
+sky_material = SubResource("ProceduralSkyMaterial_lq6o5")
+
+[sub_resource type="Environment" id="Environment_8mvtg"]
+background_mode = 2
+sky = SubResource("Sky_3fhej")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_jqct5"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_shq4w"]
+albedo_texture = ExtResource("5_u6puc")
+uv1_scale = Vector3(0.25, 0.25, 0.25)
+uv1_triplanar = true
+uv1_world_triplanar = true
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_trbqy"]
+size = Vector2(50, 50)
+
+[node name="Building3DDemo" type="Node3D"]
+script = ExtResource("1_tynj1")
+buildings = Array[PackedScene]([ExtResource("2_da6qm"), ExtResource("2_ayerb"), ExtResource("4_qddq0")])
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_8mvtg")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 0, 0)
+shadow_enabled = true
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+shape = SubResource("WorldBoundaryShape3D_jqct5")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D"]
+material_override = SubResource("StandardMaterial3D_shq4w")
+mesh = SubResource("PlaneMesh_trbqy")
+
+[node name="Grid3D" type="Node3D" parent="."]
+script = ExtResource("1_2um3x")
+infinite = true
+
+[node name="CameraPivot" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 0, 0)
+
+[node name="SpringArm3D" type="SpringArm3D" parent="CameraPivot"]
+spring_length = 16.0
+
+[node name="Camera3D" type="Camera3D" parent="CameraPivot/SpringArm3D"]
+unique_name_in_owner = true
+
+[node name="Preview" type="Node3D" parent="."]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Label" type="Label" parent="CanvasLayer"]
+offset_left = 24.0
+offset_top = 24.0
+offset_right = 275.0
+offset_bottom = 50.0
+text = "Space: Switch between buildings"

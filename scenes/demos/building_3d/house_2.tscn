@@ -1,0 +1,15 @@
+[gd_scene load_steps=4 format=3 uid="uid://cnvwogfdk5nxx"]
+
+[ext_resource type="Script" path="res://scenes/demos/building_3d/building.gd" id="1_0os3q"]
+[ext_resource type="PackedScene" uid="uid://dp8k2144g7o0s" path="res://scenes/demos/building_3d/models/roof_gable.glb" id="1_ejmni"]
+[ext_resource type="PackedScene" uid="uid://bnvoqqvwmat8w" path="res://scenes/demos/building_3d/models/wall_block.glb" id="2_hmret"]
+
+[node name="House2" type="Node3D"]
+script = ExtResource("1_0os3q")
+size = Vector2i(2, 2)
+
+[node name="wall_block" parent="." instance=ExtResource("2_hmret")]
+transform = Transform3D(3.5, 0, 0, 0, 3, 0, 0, 0, 3.5, 2, 0, 2)
+
+[node name="roof_gable" parent="." instance=ExtResource("1_ejmni")]
+transform = Transform3D(3.5, 0, 0, 0, 2.5, 0, 0, 0, 3.5, 2, 3, 2)
