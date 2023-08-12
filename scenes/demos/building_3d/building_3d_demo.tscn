@@ -31,7 +31,7 @@ uv1_triplanar = true
 uv1_world_triplanar = true
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_trbqy"]
-size = Vector2(50, 50)
+size = Vector2(200, 200)
 
 [node name="Building3DDemo" type="Node3D"]
 script = ExtResource("1_tynj1")

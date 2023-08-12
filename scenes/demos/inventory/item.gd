@@ -16,22 +16,19 @@ var occupied_cells: Array[Vector2i]
 		if grid.has_cells(_get_cells(value)):
 			top_left_cell = value
 
-
 		var world_pos := grid.map_to_world(top_left_cell)
 		var tween := create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUINT)
 		tween.tween_property(self, "global_position", world_pos, 0.3)
 
 
 func _ready() -> void:
-	connect("input_event", _on_input_event)
+	input_event.connect(_on_input_event)
 
 	for x in size.x:
 		for y in size.y:
 			occupied_cells.append(Vector2i(x, y))
 
-	top_left_cell = starting_cell
-	grid.set_values(_get_cells(top_left_cell), self)
-	grid.queue_redraw()
+	_move_to(starting_cell)
 
 
 func _process(delta: float) -> void:
@@ -59,30 +56,34 @@ func _start_dragging() -> void:
 	_drag_start_pos = top_left_cell
 
 	grid.set_values(_get_cells(top_left_cell), null)
-
 	grid.queue_redraw()
 
 
 func _stop_dragging() -> void:
 	z_index = 0
 	dragging = false
-	var target_cell = grid.world_to_map(global_position + _get_centered_offset() * 0.5)
+
+	var target_cell := grid.world_to_map(global_position + _get_centered_offset() * 0.5)
 
 	var target_cells := _get_cells(target_cell)
 	if not grid.has_cells(target_cells) or not grid.are_values_null(target_cells):
 		target_cell = _drag_start_pos
 
-	top_left_cell = target_cell
+	_move_to(target_cell)
+	queue_redraw()
 
+
+func _move_to(cell: Vector2i) -> void:
+	top_left_cell = cell
 	grid.set_values(_get_cells(top_left_cell), self)
 	grid.queue_redraw()
-	queue_redraw()
 
 
 func _get_centered_offset() -> Vector2:
 	return (Vector2(size) * 0.5) * Vector2(grid.cell_size)
 
 
+# Get all cells the item will occupy based on its size.
 func _get_cells(origin: Vector2i) -> Array[Vector2i]:
 	var cells: Array[Vector2i]
 	for occupied_cell in occupied_cells:
@@ -92,6 +93,7 @@ func _get_cells(origin: Vector2i) -> Array[Vector2i]:
 
 
 func _draw() -> void:
+	# Highlight cells the item will occupy.
 	if dragging:
 		var current_cell := grid.world_to_map(global_position + _get_centered_offset() * 0.5)
 		if not grid.has_cells(_get_cells(current_cell)):
