@@ -27,3 +27,7 @@ Check out the **built-in documentation** in your Godot project for explanations 
 1. **Download the project files.**
 2. Move the `criss-cross` folder into your `/addons` folder within your Godot project.
 3. Enable the addon through the project settings.
+
+# Credits
+
+All assets by [Kenney](https://www.kenney.nl)
