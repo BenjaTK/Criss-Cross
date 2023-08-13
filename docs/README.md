@@ -1,6 +1,9 @@
 ![logo](assets/logo.svg)
+
 # Criss-Cross
-A simple Godot addon that adds generic grid nodes for quickly building grid-based systems, in 2D or 3D.
+[![](https://img.shields.io/badge/Asset%20Library-%23478CBE?style=for-the-badge&logo=godotengine&labelColor=white
+)](https://godotengine.org/asset-library/asset/2047)\
+A simple Godot addon that adds generic **grid** nodes for quickly building grid-based systems, in **2D** or **3D**.
 
 # ✨ Nodes
 
