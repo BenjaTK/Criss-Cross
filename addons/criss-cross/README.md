@@ -5,7 +5,7 @@ A simple Godot addon that adds generic grid nodes for quickly building grid-base
 
 ## Grid2D
 A grid in the X and Y axis which contains values for each cell. It can be `infinite`, or generate cells with `regions`.\
-In the example at `scenes/demos/inventory`, it is used to make an inventory system similar to those found in games like Escape from Tarkov or Kenshi. 
+In the example at `scenes/demos/inventory`, it is used to make an inventory system similar to those found in games like Escape from Tarkov or Kenshi.
 
 
 ## Grid3D

@@ -9,6 +9,14 @@ extends Node2D
 ## all to null.[br]Used for quickly making grid-based systems.
 
 
+signal value_set(cell: Vector2i, value)
+## Emitted when the grid is changed in any way, either by removing or adding
+## cells or modifying a cell's value.
+signal grid_changed(new_grid: Dictionary)
+signal cell_added(cell: Vector2i)
+signal cell_erased(cell: Vector2i)
+
+
 ## If true, ignores [param regions] and doesn't initialize with any cells,
 ## but allows setting values in any cells.
 @export var infinite: bool = false :
@@ -91,6 +99,8 @@ func set_value(cell: Vector2i, value) -> void:
 		return
 
 	_grid[cell] = value
+	value_set.emit(cell, value)
+	grid_changed.emit(_grid)
 
 
 ## Sets the ([param x], [param y]) cell to [param value].
@@ -130,8 +140,11 @@ func get_cells() -> Dictionary:
 
 ## Adds [param cell] to the grid with a value of null.
 func add_cell(cell: Vector2i) -> void:
-	if not has_cell(cell):
-		_grid[cell] = null
+	if has_cell(cell):
+		return
+	_grid[cell] = null
+	grid_changed.emit(_grid)
+	cell_added.emit(cell)
 
 
 ## Adds a cell at ([param x], [param y]) with a value of null.
@@ -144,6 +157,8 @@ func erase_cell(cell: Vector2i) -> void:
 	if not has_cell(cell):
 		return
 	_grid.erase(cell)
+	grid_changed.emit(_grid)
+	cell_erased.emit(cell)
 
 
 ## Erases the ([param x], [param y]) cell from the grid.
