@@ -42,8 +42,8 @@ func _on_http_request_request_completed(result: int, response_code: int, headers
 	zip_file.store_buffer(body)
 	zip_file.close()
 
-	if DirAccess.dir_exists_absolute("res://addons/dialogue_manager"):
-		DirAccess.remove_absolute("res://addons/dialogue_manager")
+	if DirAccess.dir_exists_absolute("res://addons/criss-cross"):
+		DirAccess.remove_absolute("res://addons/criss-cross")
 
 	var zip_reader: ZIPReader = ZIPReader.new()
 	zip_reader.open(TEMP_FILE_PATH)
