@@ -7,6 +7,7 @@ extends Area2D
 var dragging := false
 var _drag_start_pos: Vector2i
 var occupied_cells: Array[Vector2i]
+var tween: Tween
 
 @onready var top_left_cell = Vector2i(0, 0) :
 	set(value):
@@ -16,7 +17,7 @@ var occupied_cells: Array[Vector2i]
 			top_left_cell = value
 
 		var world_pos := grid.map_to_world(top_left_cell)
-		var tween := create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUINT)
+		tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUINT)
 		tween.tween_property(self, "global_position", world_pos, 0.3)
 
 
@@ -50,6 +51,7 @@ func _input(event: InputEvent) -> void:
 
 
 func _start_dragging() -> void:
+	tween.stop()
 	z_index = 1
 	dragging = true
 	_drag_start_pos = top_left_cell
