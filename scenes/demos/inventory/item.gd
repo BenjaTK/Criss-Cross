@@ -62,7 +62,7 @@ func _stop_dragging() -> void:
 	z_index = 0
 	dragging = false
 
-	var target_cell := grid.world_to_map(global_position + _get_centered_offset() * 0.5)
+	var target_cell := _get_mouse_top_left_cell()
 
 	var target_cells := _get_cells(target_cell)
 	if not grid.has_cells(target_cells) or not grid.are_values_null(target_cells):
@@ -85,6 +85,8 @@ func _move_to(cell: Vector2i) -> void:
 func _get_centered_offset() -> Vector2:
 	return (Vector2(size) * 0.5) * Vector2(grid.cell_size)
 
+func _get_mouse_top_left_cell() -> Vector2i:
+	return grid.world_to_map(get_global_mouse_position() + Vector2(grid.cell_size)/2.0 - _get_centered_offset())
 
 # Get all cells the item will occupy based on its size.
 func _get_cells(origin: Vector2i) -> Array[Vector2i]:
@@ -106,7 +108,7 @@ func _get_next_empty_cell_in_grid() -> Vector2i:
 func _draw() -> void:
 	# Highlight cells the item will occupy.
 	if dragging:
-		var current_cell := grid.world_to_map(global_position + _get_centered_offset() * 0.5)
+		var current_cell := _get_mouse_top_left_cell()
 		if not grid.has_cells(_get_cells(current_cell)):
 			return
 
